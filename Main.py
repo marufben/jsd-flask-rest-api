@@ -59,7 +59,9 @@ def get_data_balita_gizi_buruk():
 
 @app.route('/get-data-kategori-gizi-buruk-by-tahun', methods=['GET'])
 def get_data_kategori_gizi_buruk_by_tahun():
-    
+    token = request.headers.get('Authorization')
+    if not verify_token(token):
+        return jsonify({'message': 'Unauthorized Access'}), 401
     mycursor = mydb.cursor()
     mycursor.execute("select tahun, kategori_gizi_buruk ,SUM(jumlah_balita) as jumlah from dashboard_jds.balita_gizi_buruk group by kategori_gizi_buruk, tahun order by tahun asc")
     result = mycursor.fetchall()
@@ -75,7 +77,10 @@ def get_data_kategori_gizi_buruk_by_tahun():
         data.append(row_list)
     return jsonify({'data': data})
 @app.route('/get-data-jumlah-gizi-buruk-kabupaten-kota-bytahun', methods=['GET'])
-def get_data_jumlah_gizi_buruk_kabupaten_kota_bytahun():    
+def get_data_jumlah_gizi_buruk_kabupaten_kota_bytahun():   
+    token = request.headers.get('Authorization')
+    if not verify_token(token):
+        return jsonify({'message': 'Unauthorized Access'}), 401
     mycursor = mydb.cursor()
     mycursor.execute("select nama_kabupaten_kota, SUM(jumlah_balita) as jumlah, tahun from dashboard_jds.balita_gizi_buruk group by `nama_kabupaten_kota` , tahun order by nama_kabupaten_kota, tahun")
     result = mycursor.fetchall()
@@ -90,6 +95,13 @@ def get_data_jumlah_gizi_buruk_kabupaten_kota_bytahun():
         }
         data.append(row_list)
     return jsonify({'data': data})
+
+#Function Verifiy token statis
+def verify_token(token):
+    if token == "xYEq9m2f8C8X4F9fZvp2QbndsPfESunN":
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
     app.run(debug=True)
