@@ -38,21 +38,21 @@ def store_data():
 
     return 'Data stored to MySQL database'
 
-#API Insight 1 get all data kategori gizi buruk di jawa barat
-@app.route('/get-data-kategori-gizi-buruk-by-tahun', methods=['GET'])
-def get_data_kategori_gizi_buruk_by_tahun():
-
+# API endpoint for storing data to MySQL database
+@app.route('/get-data-balita-gizi-buruk', methods=['GET'])
+def get_data_balita_gizi_buruk():
     mycursor = mydb.cursor()
-    mycursor.execute("select tahun, kategori_gizi_buruk ,SUM(jumlah_balita) as jumlah from dashboard_jds.balita_gizi_buruk group by kategori_gizi_buruk, tahun order by tahun asc")
+    mycursor.execute("SELECT * FROM balita_gizi_buruk")
     result = mycursor.fetchall()
 
 # Menampilkan data
     data = []
     for row in result:
         row_list = {
-            'kategori_gizi_buruk':row[1],
-            'jumlah_balita':row[2],
-            'tahun':row[0]
+            'nama_kabupaten_kota':row[4],
+            'kategori_gizi_buruk':row[5],
+            'jumlah_balita':row[6],
+            'tahun':row[8]
         }
         data.append(row_list)
     return jsonify({'data': data})
