@@ -37,12 +37,10 @@ def store_data():
     mydb.commit()
 
     return 'Data stored to MySQL database'
+
 #API Insight 1 get all data kategori gizi buruk di jawa barat
 @app.route('/get-data-kategori-gizi-buruk-by-tahun', methods=['GET'])
 def get_data_kategori_gizi_buruk_by_tahun():
-    token = request.headers.get('Authorization')
-    if not verify_token(token):
-        return jsonify({'message': 'Unauthorized Access'}), 401
 
     mycursor = mydb.cursor()
     mycursor.execute("select tahun, kategori_gizi_buruk ,SUM(jumlah_balita) as jumlah from dashboard_jds.balita_gizi_buruk group by kategori_gizi_buruk, tahun order by tahun asc")
