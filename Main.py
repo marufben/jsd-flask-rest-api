@@ -57,5 +57,39 @@ def get_data_balita_gizi_buruk():
         data.append(row_list)
     return jsonify({'data': data})
 
+@app.route('/get-data-kategori-gizi-buruk-by-tahun', methods=['GET'])
+def get_data_kategori_gizi_buruk_by_tahun():
+    
+    mycursor = mydb.cursor()
+    mycursor.execute("select tahun, kategori_gizi_buruk ,SUM(jumlah_balita) as jumlah from dashboard_jds.balita_gizi_buruk group by kategori_gizi_buruk, tahun order by tahun asc")
+    result = mycursor.fetchall()
+
+# Menampilkan data
+    data = []
+    for row in result:
+        row_list = {
+            'kategori_gizi_buruk':row[1],
+            'jumlah_balita':row[2],
+            'tahun':row[0]
+        }
+        data.append(row_list)
+    return jsonify({'data': data})
+@app.route('/get-data-jumlah-gizi-buruk-kabupaten-kota-bytahun', methods=['GET'])
+def get_data_jumlah_gizi_buruk_kabupaten_kota_bytahun():    
+    mycursor = mydb.cursor()
+    mycursor.execute("select nama_kabupaten_kota, SUM(jumlah_balita) as jumlah, tahun from dashboard_jds.balita_gizi_buruk group by `nama_kabupaten_kota` , tahun order by nama_kabupaten_kota, tahun")
+    result = mycursor.fetchall()
+
+# Menampilkan data
+    data = []
+    for row in result:
+        row_list = {
+            'nama_kabupaten_kota':row[0],
+            'tahun':row[2],
+            'jumlah_balita_gizi_buruk':row[1]
+        }
+        data.append(row_list)
+    return jsonify({'data': data})
+
 if __name__ == '__main__':
     app.run(debug=True)
