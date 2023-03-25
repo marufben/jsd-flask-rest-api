@@ -22,6 +22,7 @@ def store_data():
 
     # Store data to MySQL database
     mycursor = mydb.cursor()
+    mycursor.execute("TRUNCATE TABLE balita_gizi_buruk")
     sql = "INSERT INTO balita_gizi_buruk (kode_provinsi, nama_provinsi, kode_kabupaten_kota, nama_kabupaten_kota, kategori_gizi_buruk, jumlah_balita, satuan, tahun) VALUES  (%s, %s, %s, %s, %s, %s, %s, %s)"
     for row in data['data']:
         values = (row['kode_provinsi'], 
